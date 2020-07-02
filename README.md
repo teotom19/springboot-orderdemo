@@ -15,7 +15,14 @@ Main tasks:
 2. Write unit tests according to TODO notes within unit test files. When writing unit tests keep in mind 
 that the ultimate goal is to check that API responses are correct.
 
-To submit your code, you need to clone project code and create a new GitHub repository under your name. Then you can email to us the link of the project in GitHub. 
+To submit your code, you need to clone project code and create a new GitHub repository under your name. Then you can email to us the link of the project in GitHub.
+
+NOTE
+----
+ 
+If you do have time and want to add more features to the project then you can add the notion of customer. An order is placed by a customer. 
+
+Order API, in this case, will use an additional parameter (customerId) which can be used to fetch orders of a certain customer.   
 
 Good luck!
 

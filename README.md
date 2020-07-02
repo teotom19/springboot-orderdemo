@@ -4,6 +4,11 @@ This is demo project to evaluate Java Developer proficiency in Spring Boot.
 
 The context of demo is about an ordering application. User can submit an order and view any order registered on system via OrderAPI.
 
+Maven 3 and Java 8 are required in order to build the project. 
+
+The demo app uses H2 in memory database. As a result, you don't need to install any database server at all. 
+Database migration is performed automatically by JPA (see application.yml) 
+
 Main tasks:
 
 1. Fill in implementation of Order API methods in order to fetch all orders, fetch a specific order and submit a new order

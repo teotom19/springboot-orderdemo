@@ -3,6 +3,12 @@ package eu.acme.demo.web.dto;
 public class OrderRequest {
 
     String clientReferenceCode;
+    OrderDto order;
+
+    public OrderRequest(String clientReferenceCode, OrderDto order) {
+        this.clientReferenceCode = clientReferenceCode;
+        this.order = order;
+    }
 
     public String getClientReferenceCode() {
         return clientReferenceCode;
@@ -12,5 +18,11 @@ public class OrderRequest {
         this.clientReferenceCode = clientReferenceCode;
     }
 
-    //TODO: place required fields in order to create an order submitted by client
+    public OrderDto getOrder() {
+        return order;
+    }
+
+    public void setOrder(OrderDto order) {
+        this.order = order;
+    }
 }

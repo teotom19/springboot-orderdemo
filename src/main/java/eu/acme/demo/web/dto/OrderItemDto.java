@@ -9,6 +9,13 @@ public class OrderItemDto {
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
 
+    public OrderItemDto(UUID itemId, int units, BigDecimal unitPrice, BigDecimal totalPrice) {
+        this.itemId = itemId;
+        this.units = units;
+        this.unitPrice = unitPrice;
+        this.totalPrice = totalPrice;
+    }
+
     public UUID getItemId() {
         return itemId;
     }

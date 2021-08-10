@@ -6,15 +6,23 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public class OrderLiteDto {
+
     private UUID id;
     private OrderStatus status;
     private String description;
-    /**
-     * reference code used by client system to track order
-     */
     private String clientReferenceCode;
     private BigDecimal totalAmount;
     private int itemCount;
+
+    public OrderLiteDto(){}
+    public OrderLiteDto(UUID id, OrderStatus status, String description, String clientReferenceCode, BigDecimal totalAmount, int itemCount) {
+        this.id = id;
+        this.status = status;
+        this.description = description;
+        this.clientReferenceCode = clientReferenceCode;
+        this.totalAmount = totalAmount;
+        this.itemCount = itemCount;
+    }
 
     public UUID getId() {
         return id;

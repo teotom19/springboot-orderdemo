@@ -9,6 +9,16 @@ import java.math.BigDecimal;
 @Table(name = "orders")
 public class Order extends AuditableEntity {
 
+    public Order(){}
+
+    public Order(String clientReferenceCode, String description, BigDecimal itemTotalAmount, int itemCount, OrderStatus status) {
+        this.clientReferenceCode = clientReferenceCode;
+        this.description = description;
+        this.itemTotalAmount = itemTotalAmount;
+        this.itemCount = itemCount;
+        this.status = status;
+    }
+
     @Column(name = "ref_code", length = 30, nullable = false)
     private String clientReferenceCode;
 

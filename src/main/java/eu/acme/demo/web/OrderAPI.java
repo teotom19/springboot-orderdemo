@@ -2,6 +2,7 @@ package eu.acme.demo.web;
 
 import eu.acme.demo.domain.Order;
 import eu.acme.demo.domain.OrderItem;
+import eu.acme.demo.domain.enums.OrderStatus;
 import eu.acme.demo.domain.exceptions.OrderAlreadyExistsException;
 import eu.acme.demo.domain.exceptions.OrderNotFoundException;
 import eu.acme.demo.repository.OrderItemRepository;
@@ -12,6 +13,8 @@ import eu.acme.demo.web.dto.OrderLiteDto;
 import eu.acme.demo.web.dto.OrderRequest;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,7 +28,7 @@ public class OrderAPI {
 
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public OrderAPI(OrderRepository orderRepository, OrderItemRepository orderItemRepository, ModelMapper modelMapper) {
         this.orderRepository = orderRepository;
@@ -71,12 +74,28 @@ public class OrderAPI {
 
         }else{
 
-            Order order = modelMapper.map(orderRequest.getOrder(), Order.class);
-            order.setClientReferenceCode(orderRequest.getClientReferenceCode());
-            orderRepository.save(order);
+            OrderDto tempOrder = orderRequest.getOrder();
+            Order o = new Order();
+            o.setStatus(tempOrder.getStatus());
+            o.setClientReferenceCode(tempOrder.getClientReferenceCode());
+            o.setDescription(tempOrder.getDescription());
+            o.setItemCount(tempOrder.getItemCount());
+            o.setItemTotalAmount(tempOrder.getTotalAmount());
+            orderRepository.save(o);
 
             List<OrderItemDto> tempOrderItems = orderRequest.getOrder().getOrderItems();
-            List <OrderItem> orderItems =  tempOrderItems.stream().map(orderItem -> modelMapper.map(orderItem, OrderItem.class)).collect(Collectors.toList());
+            List <OrderItem> orderItems = new ArrayList<>();
+
+            if(!(tempOrderItems.isEmpty())){
+                for(OrderItemDto orderItemDto: tempOrderItems){
+                    OrderItem tempItem = new OrderItem();
+                    tempItem.setOrder(o);
+                    tempItem.setTotalPrice(orderItemDto.getTotalPrice());
+                    tempItem.setUnitPrice(orderItemDto.getUnitPrice());
+                    tempItem.setUnits(orderItemDto.getUnits());
+                    orderItems.add(tempItem);
+                }
+            }
 
             orderItemRepository.saveAll(orderItems);
 

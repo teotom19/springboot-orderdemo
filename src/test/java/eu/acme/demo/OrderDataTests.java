@@ -6,6 +6,7 @@ import eu.acme.demo.domain.OrderItem;
 import eu.acme.demo.domain.enums.OrderStatus;
 import eu.acme.demo.repository.OrderItemRepository;
 import eu.acme.demo.repository.OrderRepository;
+import eu.acme.demo.web.dto.OrderItemDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,7 +53,6 @@ public class OrderDataTests {
                 .collect(Collectors.toList());
 
         Assert.isTrue(orderItems.containsAll(Arrays.asList(orderItem1, orderItem2)), "Items not contained in retrieved list");
-
     }
 
 }

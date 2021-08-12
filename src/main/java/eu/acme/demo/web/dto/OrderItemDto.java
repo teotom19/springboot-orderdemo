@@ -47,4 +47,23 @@ public class OrderItemDto {
     public void setTotalPrice(BigDecimal totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (this == obj)
+            return true;
+        if (obj.getClass() != this.getClass())
+            return false;
+        OrderItemDto tempItem = (OrderItemDto) obj;
+        if (this.getTotalPrice().compareTo(tempItem.getTotalPrice()) != 0)
+            return false;
+        if (this.getUnits() != tempItem.getUnits())
+            return false;
+        if (this.getUnitPrice().compareTo(tempItem.getUnitPrice()) != 0)
+            return false;
+
+        return true;
+    }
 }

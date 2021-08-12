@@ -10,6 +10,7 @@ import eu.acme.demo.web.dto.OrderDto;
 import eu.acme.demo.web.dto.OrderItemDto;
 import eu.acme.demo.web.dto.OrderLiteDto;
 import eu.acme.demo.web.dto.OrderRequest;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
@@ -55,18 +53,19 @@ class OrderAPITests {
     @Test
     void testOrderAPI() throws Exception {
 
-        OrderItemDto tempItem = new OrderItemDto(UUID.randomUUID(), 10, new BigDecimal(10), new BigDecimal(100));
+        OrderItemDto tempItem1 = new OrderItemDto(UUID.randomUUID(), 10, new BigDecimal(10), new BigDecimal(100));
+        OrderItemDto tempItem2 = new OrderItemDto(UUID.randomUUID(), 5, new BigDecimal(10), new BigDecimal(50));
 
-        List<OrderItemDto> tempList = new ArrayList<>();
+        List<OrderItemDto> tempItemList = new ArrayList<>();
 
-        tempList.add(tempItem);
+        tempItemList.addAll(Arrays.asList(tempItem1, tempItem2));
 
         OrderDto tempOrder = new OrderDto(UUID.randomUUID(), OrderStatus.UNDER_PROCESS, "NO DESC"
-                            ,"TOM27", new BigDecimal(20),  5, tempList);
+                , "TOM25", new BigDecimal(20), 5, tempItemList);
 
-        OrderRequest orderRequest = new OrderRequest("TOM27", tempOrder);
+        OrderRequest orderRequest = new OrderRequest("TOM25", tempOrder);
 
-        String newOrderRequest = objectMapper.writeValueAsString(tempOrder);
+        String newOrderRequest = objectMapper.writeValueAsString(orderRequest);
 
         MvcResult orderResult = this.mockMvc.perform(post("http://localhost:8080/orders")
                         .content(newOrderRequest)
@@ -77,13 +76,23 @@ class OrderAPITests {
 
         OrderDto postedOrder = objectMapper.readValue(orderResult.getResponse().getContentAsString(), OrderDto.class);
 
-        Assert.isTrue(tempOrder.equals(postedOrder), "Orders don't match" );
+        Assert.isTrue(postedOrder.equals(tempOrder), "Orders don't match" );
     }
 
     @Test
     void testOrderDoubleSubmission() throws Exception{
 
-        Order tempOrder = new Order("TOM19", "NO DESC", new BigDecimal(10), 10, OrderStatus.UNDER_PROCESS);
+        OrderItemDto tempItem1 = new OrderItemDto(UUID.randomUUID(), 10, new BigDecimal(10), new BigDecimal(100));
+        OrderItemDto tempItem2 = new OrderItemDto(UUID.randomUUID(), 5, new BigDecimal(10), new BigDecimal(50));
+
+        List<OrderItemDto> tempItemList = new ArrayList<>();
+
+        tempItemList.addAll(Arrays.asList(tempItem1, tempItem2));
+
+        OrderDto tempOrder = new OrderDto(UUID.randomUUID(), OrderStatus.UNDER_PROCESS, "NO DESC"
+                ,"TOM19", new BigDecimal(20),  5, tempItemList);
+
+        OrderRequest orderRequest = new OrderRequest("TOM19", tempOrder);
 
         String newOrderRequest = objectMapper.writeValueAsString(tempOrder);
 
@@ -99,11 +108,11 @@ class OrderAPITests {
     @Test
     void testFetchAllOrders() throws Exception{
 
-        //4 orders are loaded into the database when LoadDatabase's CommandLiner runs +  1 order from testFetchCertainOrder()
+
         MvcResult orderResult = this.mockMvc.perform(MockMvcRequestBuilders.get("https://localhost:8080/orders")
                         .accept("application/json"))
                         .andExpect(status().isOk())
-                        .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(5)))
+                        .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(Matchers.greaterThan(0))))
                         .andReturn();
 
         System.out.println(orderResult.getResponse().getContentAsString());
